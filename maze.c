@@ -70,16 +70,16 @@ coordinates checkneigh()
         }
     }
 
-    if (ncount > 0)
+    if (ncount > 2)
     {
         int r = rand() % ncount;
+        printf("found neighbours  \n");
         return neigh[r];
     }
     else
     {
         coordinates a;
         printf("no neighbout \n");
-
         a.x = -1;
         a.y = -1;
         return a;
@@ -98,26 +98,27 @@ int generate()
     if (next.x >= 0 && next.y >= 0)
     {
         grid[j][i].visited = true;
-        printf("%d,%d pushed to stack\n", current.x, current.y);
+        // printf("%d,%d pushed to stack\n", current.x, current.y);
+        // printf("stack count %d \n", count);
         count++;
         stack[count] = next;
         avail++;
         //remove the walls
         if (j - next.y < 0)
         {
-            grid[j][i + 1].wall = false;
+            grid[j + 1][i].wall = false;
         }
         else if (j - next.y > 0)
         {
-            grid[j][i - 1].wall = false;
+            grid[j - 1][i].wall = false;
         }
         else if (i - next.x < 0)
         {
-            grid[j + 1][i].wall = false;
+            grid[j][i + 1].wall = false;
         }
         else if (i - next.x > 0)
         {
-            grid[j - 1][i].wall = false;
+            grid[j][i - 1].wall = false;
         }
         current.x = next.x;
         current.y = next.y;
@@ -140,7 +141,7 @@ void printmaze()
     {
         for (j = 0; j < c; j++)
         {
-            grid[i][j].wall ? printf("#") : printf(" ");
+            (grid[i][j].wall) ? printf("#") : printf(" ");
         }
         printf("\n");
     }
