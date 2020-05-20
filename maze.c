@@ -142,8 +142,11 @@ int generate()
 
 void printmaze()
 {
+    printf("\n");
+
     for (i = 0; i < r; i++)
     {
+        printf("  ");
         for (j = 0; j < c; j++)
         {
             // unsigned char b = 128;
@@ -166,13 +169,14 @@ void printmaze()
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 int main()
 {
-    printf("Enter Desired Height of Maze : ");
+    printf("\n Enter Desired Height of Maze : ");
     scanf("%d", &r);
-    printf("Enter Desired Width of Maze : ");
+    printf("\n Enter Desired Width of Maze : ");
     scanf("%d", &c);
     if (r % 2 == 0)
     {
