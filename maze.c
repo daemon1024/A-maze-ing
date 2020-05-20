@@ -16,7 +16,7 @@ typedef struct cell
     bool wall;
 } Cell;
 
-int r = 11, c = 11, i, j;
+int r = 31, c = 31, i, j;
 coordinates current;
 Cell **grid;
 coordinates stack[100];
@@ -25,8 +25,8 @@ int count = 0;
 
 coordinates checkneigh()
 {
-    int i = current.y;
-    int j = current.x;
+    int i = current.x;
+    int j = current.y;
     int ncount = 0;
     coordinates neigh[4];
     if (j - 2 > 0)
@@ -36,6 +36,7 @@ coordinates checkneigh()
         {
             neigh[ncount].x = top.coord.x;
             neigh[ncount].y = top.coord.y;
+            // printf("top neigh available at %d,%d and %d,%d", j - 2, i, top.coord.x, top.coord.y);
             ncount++;
         }
     }
@@ -70,16 +71,16 @@ coordinates checkneigh()
         }
     }
 
-    if (ncount > 2)
+    if (ncount > 0)
     {
         int r = rand() % ncount;
-        printf("found neighbours  \n");
+        // printf("found neighbours %d for %d,%d- r - %d  going to %d,%d\n", ncount, j, i, r, neigh[r].y, neigh[r].x);
         return neigh[r];
     }
     else
     {
         coordinates a;
-        printf("no neighbout \n");
+        // printf("no neighbout \n");
         a.x = -1;
         a.y = -1;
         return a;
@@ -88,17 +89,18 @@ coordinates checkneigh()
 
 int generate()
 {
-    if (avail >= r / 2 * c / 2)
+    if (avail >= r * c)
     {
         return 0;
     }
     int i = current.x;
     int j = current.y;
     coordinates next = checkneigh();
+    grid[j][i].visited = true;
+
     if (next.x >= 0 && next.y >= 0)
     {
-        grid[j][i].visited = true;
-        // printf("%d,%d pushed to stack\n", current.x, current.y);
+        // printf("%d,%d pushed to stack\n", next.x, next.y);
         // printf("stack count %d \n", count);
         count++;
         stack[count] = next;
@@ -124,14 +126,19 @@ int generate()
         current.y = next.y;
         generate();
     }
-    else if (avail >= 0)
+    else if (count > 0)
     {
-        count--;
-        printf("%d,%d popped from stack\n", current.x, current.y);
+        // count -= 1;
+        // printf("%d,%d popped from stack\n", stack[count].x, stack[count].x);
+        count -= 1;
         current.x = stack[count].x;
         current.y = stack[count].y;
-        printf("%d,%d reset to stack\n", current.x, current.y);
+        // printf("%d,%d reset to stack\n", stack[count].x, stack[count].x);
         generate();
+    }
+    else
+    {
+        return 0;
     }
 }
 
@@ -141,7 +148,23 @@ void printmaze()
     {
         for (j = 0; j < c; j++)
         {
-            (grid[i][j].wall) ? printf("#") : printf(" ");
+            unsigned char b = 219;
+            if (grid[i][j].wall)
+            {
+                printf("%c", b);
+            }
+            else if (grid[i][j].visited)
+            {
+                printf(" ");
+            }
+            else if (!grid[i][j].wall)
+            {
+                printf(" ");
+            }
+            else
+            {
+                printf("#");
+            }
         }
         printf("\n");
     }
@@ -160,8 +183,8 @@ int main()
     {
         for (j = 0; j < c; j++)
         {
-            grid[i][j].coord.x = i;
-            grid[i][j].coord.y = j;
+            grid[i][j].coord.x = j;
+            grid[i][j].coord.y = i;
             if (j % 2 == 1 && i % 2 == 1)
             {
                 grid[i][j].visited = false;
@@ -175,6 +198,7 @@ int main()
             else
             {
                 grid[i][j].wall = true;
+                grid[i][j].visited = false;
             }
         }
     }
