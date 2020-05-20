@@ -143,7 +143,50 @@ int generate()
 
 int solve()
 {
-
+    int i = current.x;
+    int j = current.y;
+    if (grid[j][i].wall == false && grid[j][i].visited == false)
+    {
+        grid[j][i].path = true;
+        grid[j][i].visited = true;
+        count++;
+        stack[count] = current;
+        // printf("%d,%d pushed to stack\n", current.y, current.x);
+    }
+    if (j == r - 1 && i == c - 2)
+    {
+        return 0;
+    }
+    if (j - 1 > 0 && grid[j - 1][i].wall == false && grid[j - 1][i].visited == false)
+    {
+        current.y--;
+        solve();
+    }
+    else if (i + 1 < c - 1 && grid[j][i + 1].wall == false && grid[j][i + 1].visited == false)
+    {
+        current.x++;
+        solve();
+    }
+    else if (j + 1 <= r - 1 && grid[j + 1][i].wall == false && grid[j + 1][i].visited == false)
+    {
+        current.y++;
+        solve();
+    }
+    else if (i - 1 > 0 && grid[j][i - 1].wall == false && grid[j][i - 1].visited == false)
+    {
+        current.x--;
+        solve();
+    }
+    else
+    {
+        grid[j][i].path = false;
+        // printf("%d,%d popped stack\n", current.y, current.x);
+        count -= 1;
+        current.x = stack[count].x;
+        current.y = stack[count].y;
+        // printf("%d,%d reset to stack\n", current.y, current.x);
+        solve();
+    }
 }
 void printmaze()
 {
@@ -154,17 +197,20 @@ void printmaze()
         printf("  ");
         for (j = 0; j < c; j++)
         {
-            unsigned char b = 219;
+            // unsigned char b = 219;
             if (grid[i][j].wall)
             {
                 // printf("█");
-                printf("%c",b);
-                grid[i][j].path = false;
+                printf("%c", 178);
+            }
+            else if (grid[i][j].path)
+            {
+                printf("%c", 250);
             }
             else
             {
                 printf(" ");
-                grid[i][j].path = true;
+                grid[i][j].visited = false;
             }
         }
         printf("\n");
@@ -199,6 +245,7 @@ int main()
         {
             grid[i][j].coord.x = j;
             grid[i][j].coord.y = i;
+            grid[i][j].path = false;
             if (j % 2 == 1 && i % 2 == 1)
             {
                 grid[i][j].visited = false;
@@ -218,9 +265,14 @@ int main()
     }
     current.x = 1;
     current.y = 1;
-    grid[current.x][current.y].visited = true;
+    grid[current.y][current.x].visited = true;
     stack[count] = current;
     generate();
     printmaze();
-    printf("\n Now solving the maze \n")
+    printf("Now solving the maze \n");
+    count = 0;
+    current.x = 1;
+    current.y = 0;
+    solve();
+    printmaze();
 }
