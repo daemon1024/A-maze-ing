@@ -16,7 +16,7 @@ typedef struct cell
     bool wall;
 } Cell;
 
-int r = 31, c = 31, i, j;
+int r = 41, c = 81, i, j;
 coordinates current;
 Cell **grid;
 coordinates stack[100];
@@ -36,7 +36,6 @@ coordinates checkneigh()
         {
             neigh[ncount].x = top.coord.x;
             neigh[ncount].y = top.coord.y;
-            // printf("top neigh available at %d,%d and %d,%d", j - 2, i, top.coord.x, top.coord.y);
             ncount++;
         }
     }
@@ -128,7 +127,6 @@ int generate()
     }
     else if (count > 0)
     {
-        // count -= 1;
         // printf("%d,%d popped from stack\n", stack[count].x, stack[count].x);
         count -= 1;
         current.x = stack[count].x;
@@ -148,10 +146,10 @@ void printmaze()
     {
         for (j = 0; j < c; j++)
         {
-            unsigned char b = 219;
+            // unsigned char b = 128;
             if (grid[i][j].wall)
             {
-                printf("%c", b);
+                printf("█");
             }
             else if (grid[i][j].visited)
             {
@@ -172,8 +170,20 @@ void printmaze()
 
 int main()
 {
-    // scanf("%d%d", &r, &c);
+    printf("Enter Desired Height of Maze : ");
+    scanf("%d", &r);
+    printf("Enter Desired Width of Maze : ");
+    scanf("%d", &c);
+    if (r % 2 == 0)
+    {
+        r++;
+    }
+    if (c % 2 == 0)
+    {
+        c++;
+    }
     srand(time(0));
+
     grid = (Cell **)malloc(sizeof(Cell *) * r);
     for (i = 0; i < r; i++)
     {
