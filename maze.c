@@ -14,6 +14,7 @@ typedef struct cell
     coordinates coord;
     bool visited;
     bool wall;
+    bool path;
 } Cell;
 
 int r = 41, c = 81, i, j;
@@ -140,6 +141,10 @@ int generate()
     }
 }
 
+int solve()
+{
+
+}
 void printmaze()
 {
     printf("\n");
@@ -149,22 +154,17 @@ void printmaze()
         printf("  ");
         for (j = 0; j < c; j++)
         {
-            // unsigned char b = 128;
+            unsigned char b = 219;
             if (grid[i][j].wall)
             {
-                printf("█");
-            }
-            else if (grid[i][j].visited)
-            {
-                printf(" ");
-            }
-            else if (!grid[i][j].wall)
-            {
-                printf(" ");
+                // printf("█");
+                printf("%c",b);
+                grid[i][j].path = false;
             }
             else
             {
-                printf("#");
+                printf(" ");
+                grid[i][j].path = true;
             }
         }
         printf("\n");
@@ -222,4 +222,5 @@ int main()
     stack[count] = current;
     generate();
     printmaze();
+    printf("\n Now solving the maze \n")
 }
